@@ -11,8 +11,8 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-   {
-       Schema::create('event_sessions', function (Blueprint $table) {
+    {
+        Schema::create('event_sessions', function (Blueprint $table) {
             $table->id('session_id');
             $table->unsignedBigInteger('event_id');
             $table->string('session_title', 150)->nullable();
@@ -20,11 +20,14 @@ return new class extends Migration
             $table->timestamp('end_date')->nullable();
             $table->string('location', 255);
 
+            // Foreign Key Constraint
             $table->foreign('event_id')->references('event_id')->on('events')->onDelete('cascade');
         });
 
-        // The Fix: Run a raw DB statement to inject the MySQL CHECK constraint safely
-        DB::statement('ALTER TABLE event_sessions ADD CONSTRAINT chk_date_logic CHECK (end_date > start_date)');
+        // Safe cross-database fallback: Only run the ALTER TABLE statement if we aren't using SQLite
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement('ALTER TABLE event_sessions ADD CONSTRAINT chk_date_logic CHECK (end_date > start_date)');
+        }
     }
 
     /**

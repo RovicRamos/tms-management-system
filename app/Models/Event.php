@@ -28,6 +28,8 @@ class Event extends Model
 
     public function instructor(): BelongsTo
     {
+        // Removed the $this->instructor_role_id bug because relationship models 
+        // can't reference instance properties ($this) cleanly inside eager loading loops
         return $this->belongsTo(User::class, 'instructor_id', 'user_id');
     }
 

@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TMS | Training Management System</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
+    <link rel="icon" type="image/png" href="/images/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        // Custom Palette Variables derived from your reference image
                         darkSlate: '#082020',
                         mutedTeal: '#5EAFBF',
                         iceBlue: '#DDF2F7',
@@ -34,11 +33,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center gap-3">
-
-                <img src="{{ asset('images/logo.png') }}" 
-             alt="Global Seminar App Logo" 
-             class="h-9 w-auto object-contain">
-                    <span class="text-2xl font-black tracking-wider text-deepOcean">TSM SYSTEM</span>
+                    <img src="/images/logo.png" alt="Global Seminar App Logo" class="h-9 w-auto object-contain">
+                    <span class="text-2xl font-black tracking-wider text-deepOcean">TMS SYSTEM</span>
                 </div>
                 
                 <div class="hidden md:flex items-center space-x-8 font-medium text-gray-600">
@@ -47,8 +43,9 @@
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('login') }}" class="text-sm font-semibold text-gray-700 hover:text-deepOcean transition">Log In</a>
-                    <a href="{{ route('register') }}" class="text-sm font-semibold bg-softOrange text-white px-4 py-2 rounded-lg shadow-sm hover:bg-terracotta transition">Get Started</a>                </div>
+                    <a href="/login" class="text-sm font-semibold text-gray-700 hover:text-deepOcean transition">Log In</a>
+                    <a href="/register" class="text-sm font-semibold bg-softOrange text-white px-4 py-2 rounded-lg shadow-sm hover:bg-terracotta transition">Get Started</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -93,7 +90,7 @@
                     <div class="grid grid-cols-2 gap-4 text-center pt-2">
                         <div class="bg-white p-3 rounded-lg border border-gray-200">
                             <span class="block text-xl font-bold text-deepOcean">Database</span>
-                            <span class="text-xs text-slateGray uppercase font-bold tracking-wider">Synced (MySQL)</span>
+                            <span class="text-xs text-slateGray uppercase font-bold tracking-wider">Synced (SQLite)</span>
                         </div>
                         <div class="bg-white p-3 rounded-lg border border-gray-200">
                             <span class="block text-xl font-bold text-softMutedTeal">Models</span>
@@ -112,16 +109,11 @@
         </div>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition flex flex-col justify-between">
                 <div class="p-6 space-y-4">
-                    <span class="inline-block text-xs font-bold text-white bg-crimson px-2.5 py-1 rounded-md uppercase tracking-wider">
-                        Seminar
-                    </span>
+                    <span class="inline-block text-xs font-bold text-white bg-crimson px-2.5 py-1 rounded-md uppercase tracking-wider">Seminar</span>
                     <h3 class="text-xl font-bold text-darkSlate line-clamp-1">Advanced Laravel Architecture</h3>
-                    <p class="text-sm text-slateGray line-clamp-3 leading-relaxed">
-                        Master enterprise relational design patterns, custom schemas, and deep Eloquent query constraints.
-                    </p>
+                    <p class="text-sm text-slateGray line-clamp-3 leading-relaxed">Master enterprise relational design patterns, custom schemas, and deep Eloquent query constraints.</p>
                 </div>
                 <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-between items-center">
                     <span class="text-xs font-semibold text-slateGray">Capacity: 30 Seats</span>
@@ -131,13 +123,9 @@
 
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition flex flex-col justify-between">
                 <div class="p-6 space-y-4">
-                    <span class="inline-block text-xs font-bold text-darkSlate bg-mustardGold px-2.5 py-1 rounded-md uppercase tracking-wider">
-                        Workshop
-                    </span>
+                    <span class="inline-block text-xs font-bold text-darkSlate bg-mustardGold px-2.5 py-1 rounded-md uppercase tracking-wider">Workshop</span>
                     <h3 class="text-xl font-bold text-darkSlate line-clamp-1">Relational Database Normalization</h3>
-                    <p class="text-sm text-slateGray line-clamp-3 leading-relaxed">
-                        Understanding key design patterns, structural integrity check constraints, and composite unique indices.
-                    </p>
+                    <p class="text-sm text-slateGray line-clamp-3 leading-relaxed">Understanding key design patterns, structural integrity check constraints, and composite unique indices.</p>
                 </div>
                 <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-between items-center">
                     <span class="text-xs font-semibold text-slateGray">Capacity: 100 Seats</span>
@@ -147,26 +135,21 @@
 
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition flex flex-col justify-between">
                 <div class="p-6 space-y-4">
-                    <span class="inline-block text-xs font-bold text-white bg-softMutedTeal px-2.5 py-1 rounded-md uppercase tracking-wider">
-                        Technical Training
-                    </span>
+                    <span class="inline-block text-xs font-bold text-white bg-softMutedTeal px-2.5 py-1 rounded-md uppercase tracking-wider">Technical Training</span>
                     <h3 class="text-xl font-bold text-darkSlate line-clamp-1">API Authentication Protocols</h3>
-                    <p class="text-sm text-slateGray line-clamp-3 leading-relaxed">
-                        Implementing secure tokens, managing session drivers, and protecting sensitive administrative routes safely.
-                    </p>
+                    <p class="text-sm text-slateGray line-clamp-3 leading-relaxed">Implementing secure tokens, managing session drivers, and protecting sensitive administrative routes safely.</p>
                 </div>
                 <div class="bg-gray-50 px-6 py-4 border-t border-gray-100 flex justify-between items-center">
                     <span class="text-xs font-semibold text-slateGray">Capacity: 45 Seats</span>
                     <button class="text-sm font-bold text-deepOcean hover:text-softMutedTeal transition">View Details &rarr;</button>
                 </div>
             </div>
-
         </div>
     </main>
 
     <footer class="bg-white border-t border-gray-100 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-slateGray">
-            &copy; 2026 Training Management System (TMS ADMIN). All rights reserved.
+            &copy; 2026 Training Management System (TMS SYSTEM). All rights reserved.
         </div>
     </footer>
 

@@ -2,35 +2,43 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model
+class User extends Authenticatable
 {
-    protected $primaryKey = 'user_id';
-    public $timestamps = false; // We used a custom created_at timestamp instead
+    use HasFactory, Notifiable;
+
+    public $timestamps = false;
+
+    // 1. ADD THIS LINE (Change 'user_id' to your actual primary key column name if it is different)
+    protected $primaryKey = 'user_id'; 
 
     protected $fillable = [
-        'role_id', 
-        'first_name', 
-        'last_name', 
-        'email', 
-        'password_hash', 
-        'phone', 
-        'is_active'
+        'first_name',
+        'last_name',
+        'email',
+        'password_hash',
+        'role_id',
     ];
 
-    protected $hidden = ['password_hash']; // Keeps password secure when handling user arrays
+    protected $hidden = [
+        'password_hash',
+        'remember_token',
+    ];
 
-    public function role(): BelongsTo
+    public function getAuthPasswordName()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'role_id');
+        return 'password_hash';
     }
 
-    // For clients enrolling in events
-    public function enrollments(): HasMany
+    public function getAuthPassword(): string
     {
-        return $this->hasMany(Enrollment::class, 'client_id', 'user_id');
+        return $this->password_hash;
     }
+
+    public function getRememberToken() { return null; }
+    public function setRememberToken($value) {}
+    public function getRememberTokenName() { return ''; }
 }
