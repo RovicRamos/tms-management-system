@@ -1,22 +1,34 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EnrollmentController;
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\SessionController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Client\SeminarController;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\Client\SeminarController; // <-- Make sure this line is exactly here
+use Illuminate\Support\Facades\Route;
 
-// Authentication Routes
-Route::get('/', [PageController::class, 'landing']);
+Route::get('/', [PageController::class, 'landing'])->name('home');
+
 Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::post('/login', [PageController::class, 'authenticate'])->name('login.authenticate');
+
+Route::get('/admin/login', [PageController::class, 'adminLogin'])->name('admin.login');
+Route::post('/admin/login', [PageController::class, 'adminAuthenticate'])->name('admin.authenticate');
+
 Route::get('/register', [PageController::class, 'register'])->name('register');
 Route::post('/register', [PageController::class, 'storeRegistration'])->name('register.store');
-Route::post('/logout', [PageController::class, 'logout'])->name('logout');
 
-// Seminar Dashboard Route
-// Change this line to make sure it calls your SeminarController!
-Route::get('/seminars', [SeminarController::class, 'index'])->name('seminars');
-// routes/web.php
-
-Route::middleware(['auth'])->group(function () {
-Route::get('/seminars', [SeminarController::class, 'index'])->name('seminars.index');
+Route::middleware('auth')->group(function () {
+	Route::post('/logout', [PageController::class, 'logout'])->name('logout');
+	Route::get('/seminars', [SeminarController::class, 'index'])->name('seminars');
+	Route::prefix('admin')->middleware('admin')->name('admin.')->group(function () {
+		Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+		Route::resource('/events', EventController::class)->except(['show']);
+		Route::resource('/sessions', SessionController::class)->except(['show']);
+		Route::resource('/users', UserController::class)->except(['show', 'create', 'store']);
+		Route::get('/enrollments', [EnrollmentController::class, 'index'])->name('enrollments.index');
+		Route::delete('/enrollments/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollments.destroy');
+	});
 });

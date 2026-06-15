@@ -2,38 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class User extends Authenticatable
+class Role extends Model
 {
-    use HasFactory, Notifiable;
-
+    protected $primaryKey = 'role_id';
     public $timestamps = false;
 
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'password_hash',
-        'role_id',
+        'role_name',
+        'description',
     ];
 
-    protected $hidden = [
-        'password_hash',
-    ];
-
-    // Tell Laravel to use your custom column for authentication verification
-    public function getAuthPasswordName()
+    public function users(): HasMany
     {
-        return 'password_hash';
+        return $this->hasMany(User::class, 'role_id', 'role_id');
     }
-
-    /**
-     * Disable remember_token if your database table does not have it
-     */
-    public function getRememberToken() { return null; }
-    public function setRememberToken($value) {}
-    public function getRememberTokenName() { return ''; }
 }

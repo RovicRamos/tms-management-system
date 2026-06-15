@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class PageController extends Controller
@@ -19,6 +19,11 @@ class PageController extends Controller
         return view('auth.login');
     }
 
+    public function adminLogin()
+    {
+        return view('admin.login');
+    }
+
     public function register()
     {
         return view('auth.register');
@@ -26,26 +31,12 @@ class PageController extends Controller
 
     public function authenticate(Request $request)
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        return $this->attemptLogin($request);
+    }
 
-        // Manually check if the user exists in your custom database table
-        $user = User::where('email', $request->email)->first();
-
-        if ($user && Hash::check($request->password, $user->password_hash)) {
-            // Force manual login 
-            Auth::login($user);
-            
-            $request->session()->regenerate();
-            return redirect()->to('/seminars');
-        }
-
-        // If it falls through here, the password hash check failed
-        return back()->withErrors([
-            'email' => 'The credentials do not match our database records.',
-        ])->onlyInput('email');
+    public function adminAuthenticate(Request $request)
+    {
+        return $this->attemptLogin($request, 1);
     }
 
     public function storeRegistration(Request $request)
@@ -68,7 +59,38 @@ class PageController extends Controller
 
         Auth::login($user);
 
-        return redirect()->to('/seminars');
+        return redirect()->route('seminars');
+    }
+
+    protected function attemptLogin(Request $request, ?int $requiredRoleId = null)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user || ! Hash::check($request->password, $user->password_hash)) {
+            return back()->withErrors([
+                'email' => 'The credentials do not match our database records.',
+            ])->onlyInput('email');
+        }
+
+        if ($requiredRoleId !== null && (int) $user->role_id !== $requiredRoleId) {
+            return back()->withErrors([
+                'email' => 'Please use an administrator account to sign in here.',
+            ])->onlyInput('email');
+        }
+
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        if ((int) $user->role_id === 1) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('seminars');
     }
 
     public function logout(Request $request)

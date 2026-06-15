@@ -41,6 +41,12 @@
         <p class="text-center text-sm text-gray-500 pt-2">
             Don't have an account? <a href="/register" class="text-teal-600 font-semibold hover:underline">Create an account</a>
         </p>
+
+        <div class="rounded-xl border border-teal-100 bg-teal-50/70 p-4 text-sm text-gray-700 space-y-2">
+            <p class="font-semibold text-deepOcean">Administrator access</p>
+            <p>Admins can use the same form and will be routed to the dashboard automatically.</p>
+            <p><a href="{{ route('admin.login') }}" class="font-semibold text-softMutedTeal hover:underline">Open the admin login page</a></p>
+        </div>
     </div>
 
 </body>
