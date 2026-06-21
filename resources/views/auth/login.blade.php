@@ -44,8 +44,7 @@
 
         <div class="rounded-xl border border-teal-100 bg-teal-50/70 p-4 text-sm text-gray-700 space-y-2">
             <p class="font-semibold text-deepOcean">Administrator access</p>
-            <p>Admins can use the same form and will be routed to the dashboard automatically.</p>
-            <p><a href="{{ route('admin.login') }}" class="font-semibold text-softMutedTeal hover:underline">Open the admin login page</a></p>
+            <p>If you're an administrator, enter your email and password above. You'll be automatically routed to the admin dashboard.</p>
         </div>
     </div>
 

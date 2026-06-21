@@ -14,9 +14,6 @@ Route::get('/', [PageController::class, 'landing'])->name('home');
 Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::post('/login', [PageController::class, 'authenticate'])->name('login.authenticate');
 
-Route::get('/admin/login', [PageController::class, 'adminLogin'])->name('admin.login');
-Route::post('/admin/login', [PageController::class, 'adminAuthenticate'])->name('admin.authenticate');
-
 Route::get('/register', [PageController::class, 'register'])->name('register');
 Route::post('/register', [PageController::class, 'storeRegistration'])->name('register.store');
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -42,4 +43,9 @@ class User extends Authenticatable
     public function getRememberToken() { return null; }
     public function setRememberToken($value) {}
     public function getRememberTokenName() { return ''; }
+
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'role_id');
+    }
 }

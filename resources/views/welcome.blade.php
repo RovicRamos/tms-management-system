@@ -43,7 +43,6 @@
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('admin.login') }}" class="text-sm font-semibold text-deepOcean hover:text-softMutedTeal transition">Admin Login</a>
                     <a href="/login" class="text-sm font-semibold text-gray-700 hover:text-deepOcean transition">Log In</a>
                     <a href="/register" class="text-sm font-semibold bg-softOrange text-white px-4 py-2 rounded-lg shadow-sm hover:bg-terracotta transition">Get Started</a>
                 </div>

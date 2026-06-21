@@ -19,10 +19,7 @@ class PageController extends Controller
         return view('auth.login');
     }
 
-    public function adminLogin()
-    {
-        return view('admin.login');
-    }
+
 
     public function register()
     {
@@ -34,10 +31,7 @@ class PageController extends Controller
         return $this->attemptLogin($request);
     }
 
-    public function adminAuthenticate(Request $request)
-    {
-        return $this->attemptLogin($request, 1);
-    }
+
 
     public function storeRegistration(Request $request)
     {
