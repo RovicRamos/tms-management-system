@@ -6,6 +6,7 @@
     <title>TMS | Admin Dashboard</title>
     <link rel="icon" type="image/png" href="/images/logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -81,6 +82,50 @@
         </section>
 
         <section class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden p-6">
+                <div class="space-y-2 mb-6">
+                    <h2 class="text-lg font-bold text-darkSlate">Enrollment Trends (30 Days)</h2>
+                    <p class="text-sm text-slateGray">Daily enrollments in the training management system.</p>
+                </div>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="enrollmentTrendsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden p-6">
+                <div class="space-y-2 mb-6">
+                    <h2 class="text-lg font-bold text-darkSlate">User Registrations (12 Months)</h2>
+                    <p class="text-sm text-slateGray">Monthly new client account registrations.</p>
+                </div>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="userRegistrationChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden p-6">
+                <div class="space-y-2 mb-6">
+                    <h2 class="text-lg font-bold text-darkSlate">Events by Status</h2>
+                    <p class="text-sm text-slateGray">Distribution of training events across different statuses.</p>
+                </div>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="eventsByStatusChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden p-6">
+                <div class="space-y-2 mb-6">
+                    <h2 class="text-lg font-bold text-darkSlate">Enrollments by Event Type</h2>
+                    <p class="text-sm text-slateGray">Total registrations grouped by training category.</p>
+                </div>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="enrollmentsByTypeChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 xl:grid-cols-2 gap-8">
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"><div><h2 class="text-lg font-bold text-darkSlate">Recent Events</h2><p class="text-sm text-slateGray">Latest training items added to the system.</p></div><span class="text-xs font-bold tracking-wider uppercase text-softMutedTeal">Overview</span></div>
                 <div class="divide-y divide-gray-100">
@@ -116,19 +161,218 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
-                <div><h2 class="text-lg font-bold text-darkSlate">Quick Actions</h2><p class="text-sm text-slateGray">Direct access to the main management screens.</p></div>
-                <div class="grid sm:grid-cols-2 gap-4">
-                    <a href="{{ route('admin.events.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">Manage events</p><p class="text-sm text-slateGray mt-1">Create and maintain training events.</p></a>
-                    <a href="{{ route('admin.sessions.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">Manage sessions</p><p class="text-sm text-slateGray mt-1">Schedule event sessions and locations.</p></a>
-                    <a href="{{ route('admin.users.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">Manage users</p><p class="text-sm text-slateGray mt-1">Edit roles and account status.</p></a>
-                    <a href="{{ route('admin.enrollments.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">Manage enrollments</p><p class="text-sm text-slateGray mt-1">Review client registrations.</p></a>
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"><div><h2 class="text-lg font-bold text-darkSlate">Recent Notifications</h2><p class="text-sm text-slateGray">Latest system alerts and updates.</p></div><a href="{{ route('admin.notifications.index') }}" class="text-xs font-bold tracking-wider uppercase text-softMutedTeal hover:text-deepOcean">View All</a></div>
+                <div class="divide-y divide-gray-100">
+                    @forelse ($recentNotifications as $notification)
+                        <div class="px-6 py-4 flex items-start justify-between gap-4 {{ !$notification->is_read ? 'bg-iceBlue' : '' }}"><div class="space-y-1 flex-1"><p class="font-semibold text-darkSlate">{{ $notification->title }}</p><p class="text-sm text-slateGray">{{ $notification->message }}</p><span class="text-xs text-slateGray">{{ $notification->created_at->diffForHumans() }}</span></div><span class="inline-flex shrink-0 items-center rounded-full bg-gray-200 px-3 py-1 text-xs font-bold text-darkSlate">{{ $notification->type }}</span></div>
+                    @empty
+                        <div class="px-6 py-8 text-sm text-slateGray">No notifications yet.</div>
+                    @endforelse
                 </div>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            <div><h2 class="text-lg font-bold text-darkSlate">Management Tools</h2><p class="text-sm text-slateGray">Direct access to the main management screens.</p></div>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                <a href="{{ route('admin.events.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">Manage Events</p><p class="text-sm text-slateGray mt-1">Create and maintain training events.</p></a>
+                <a href="{{ route('admin.sessions.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">Manage Sessions</p><p class="text-sm text-slateGray mt-1">Schedule event sessions and locations.</p></a>
+                <a href="{{ route('admin.users.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">Manage Users</p><p class="text-sm text-slateGray mt-1">Edit roles and account status.</p></a>
+                <a href="{{ route('admin.enrollments.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">Manage Enrollments</p><p class="text-sm text-slateGray mt-1">Review client registrations.</p></a>
+                <a href="{{ route('admin.notifications.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">View Notifications</p><p class="text-sm text-slateGray mt-1">System notifications and alerts.</p></a>
+                <a href="{{ route('admin.logs.index') }}" class="rounded-2xl border border-gray-200 bg-gray-50 p-4 hover:border-softMutedTeal hover:shadow-sm transition"><p class="font-semibold text-darkSlate">View Activity Logs</p><p class="text-sm text-slateGray mt-1">Monitor admin actions and events.</p></a>
             </div>
         </section>
     </main>
 
     <footer class="bg-white border-t border-gray-100 py-6 text-center text-xs text-slateGray mt-8">&copy; 2026 Training Management System. All rights reserved.</footer>
+
+    <script>
+        // Color palette
+        const colors = {
+            primary: '#0C4A60',
+            secondary: '#5EAFBF',
+            success: '#4F9DA6',
+            warning: '#E6B800',
+            danger: '#D9534F',
+            light: '#DDF2F7',
+            dark: '#082020',
+        };
+
+        // Enrollment Trends Chart
+        const enrollmentCtx = document.getElementById('enrollmentTrendsChart').getContext('2d');
+        new Chart(enrollmentCtx, {
+            type: 'line',
+            data: {
+                labels: @json($enrollmentTrends['labels']),
+                datasets: [{
+                    label: 'Daily Enrollments',
+                    data: @json($enrollmentTrends['data']),
+                    borderColor: colors.primary,
+                    backgroundColor: 'rgba(12, 74, 96, 0.05)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: colors.primary,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                        },
+                        ticks: {
+                            color: '#5B7582',
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            color: '#5B7582',
+                        }
+                    }
+                }
+            }
+        });
+
+        // User Registration Chart
+        const userRegCtx = document.getElementById('userRegistrationChart').getContext('2d');
+        new Chart(userRegCtx, {
+            type: 'bar',
+            data: {
+                labels: @json($userRegistrationTrends['labels']),
+                datasets: [{
+                    label: 'New Clients',
+                    data: @json($userRegistrationTrends['data']),
+                    backgroundColor: colors.secondary,
+                    borderColor: colors.primary,
+                    borderWidth: 1,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                        },
+                        ticks: {
+                            color: '#5B7582',
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            color: '#5B7582',
+                        }
+                    }
+                }
+            }
+        });
+
+        // Events by Status Chart
+        const statusCtx = document.getElementById('eventsByStatusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: @json($eventsByStatus['labels']),
+                datasets: [{
+                    data: @json($eventsByStatus['data']),
+                    backgroundColor: @json($eventsByStatus['backgroundColor']),
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            color: '#5B7582',
+                            font: {
+                                size: 12,
+                                weight: '500',
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Enrollments by Event Type Chart
+        const typeCtx = document.getElementById('enrollmentsByTypeChart').getContext('2d');
+        new Chart(typeCtx, {
+            type: 'bar',
+            data: {
+                labels: @json($enrollmentsByEventType['labels']),
+                datasets: [{
+                    label: 'Total Enrollments',
+                    data: @json($enrollmentsByEventType['data']),
+                    backgroundColor: [colors.primary, colors.secondary, colors.success, colors.warning, colors.danger],
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)',
+                        },
+                        ticks: {
+                            color: '#5B7582',
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false,
+                        },
+                        ticks: {
+                            color: '#5B7582',
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>

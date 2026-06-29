@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\EnrollmentController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\SessionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Client\SeminarController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
@@ -27,5 +29,19 @@ Route::middleware('auth')->group(function () {
 		Route::resource('/users', UserController::class)->except(['show', 'create', 'store']);
 		Route::get('/enrollments', [EnrollmentController::class, 'index'])->name('enrollments.index');
 		Route::delete('/enrollments/{enrollment}', [EnrollmentController::class, 'destroy'])->name('enrollments.destroy');
+		
+		// Notifications
+		Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+		Route::post('/notifications/{notification}/mark-read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+		Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+		Route::delete('/notifications/{notification}', [NotificationController::class, 'delete'])->name('notifications.delete');
+		Route::get('/notifications/unread/count', [NotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
+		Route::get('/notifications/recent', [NotificationController::class, 'getRecent'])->name('notifications.recent');
+		
+		// Activity Logs
+		Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+		Route::get('/logs/{log}', [LogController::class, 'show'])->name('logs.show');
+		Route::get('/logs/filter', [LogController::class, 'filter'])->name('logs.filter');
+		Route::get('/logs/export', [LogController::class, 'export'])->name('logs.export');
 	});
 });
