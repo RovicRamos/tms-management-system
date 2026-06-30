@@ -19,6 +19,10 @@ Route::post('/login', [PageController::class, 'authenticate'])->name('login.auth
 Route::get('/register', [PageController::class, 'register'])->name('register');
 Route::post('/register', [PageController::class, 'storeRegistration'])->name('register.store');
 
+Route::get('/email/verify', [PageController::class, 'verifyNotice'])->name('verification.notice');
+Route::get('/email/verify/{id}/{token}', [PageController::class, 'verifyEmail'])->name('verification.verify');
+Route::post('/email/verification-notification', [PageController::class, 'resendVerification'])->name('verification.resend');
+
 Route::middleware('auth')->group(function () {
 	Route::post('/logout', [PageController::class, 'logout'])->name('logout');
 	Route::get('/seminars', [SeminarController::class, 'index'])->name('seminars');

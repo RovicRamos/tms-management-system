@@ -11,28 +11,36 @@
     <div class="max-w-lg w-full bg-white p-10 rounded-2xl shadow-lg">
         <h2 class="text-3xl font-bold text-center mb-8">Create Account</h2>
 
+        @if ($errors->any())
+            <div class="bg-red-50 text-red-600 p-3 rounded-lg text-sm space-y-1 mb-6">
+                @foreach ($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
+
         <form action="{{ route('register.store') }}" method="POST" class="space-y-4">
             @csrf
             
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-sm font-semibold">First Name</label>
-                    <input type="text" name="first_name" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500">
+                    <input type="text" name="first_name" value="{{ old('first_name') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500">
                 </div>
                 <div>
                     <label class="block text-sm font-semibold">Last Name</label>
-                    <input type="text" name="last_name" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500">
+                    <input type="text" name="last_name" value="{{ old('last_name') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500">
                 </div>
             </div>
 
             <div>
                 <label class="block text-sm font-semibold">Email</label>
-                <input type="email" name="email" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500">
+                <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500">
             </div>
 
             <div>
                 <label class="block text-sm font-semibold">Phone</label>
-                <input type="tel" name="phone" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500">
+                <input type="tel" name="phone" value="{{ old('phone') }}" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500">
             </div>
 
             <div>
