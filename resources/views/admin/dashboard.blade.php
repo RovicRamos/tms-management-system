@@ -47,6 +47,14 @@
                         <span class="text-xs font-semibold tracking-wider uppercase text-softMutedTeal">Administrator</span>
                     </div>
 
+                    <a href="{{ route('admin.notifications.index') }}" class="relative text-deepOcean hover:text-softMutedTeal transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        @php $unread = \App\Models\AdminNotification::where('is_read', false)->count(); @endphp
+                        @if ($unread > 0)
+                            <span class="absolute -top-1.5 -right-1.5 bg-crimson text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">{{ $unread > 9 ? '9+' : $unread }}</span>
+                        @endif
+                    </a>
+
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="text-xs font-bold text-crimson hover:text-white border border-crimson hover:bg-crimson px-3 py-1.5 rounded-lg transition duration-200">Sign Out</button>
@@ -74,8 +82,8 @@
 
         <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"><p class="text-xs font-bold tracking-widest uppercase text-slateGray">Total Users</p><div class="mt-3 flex items-end justify-between"><span class="text-4xl font-black text-darkSlate">{{ $stats['users'] }}</span><span class="text-sm font-semibold text-softMutedTeal">All accounts</span></div></div>
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"><p class="text-xs font-bold tracking-widest uppercase text-slateGray">Administrators</p><div class="mt-3 flex items-end justify-between"><span class="text-4xl font-black text-darkSlate">{{ $stats['admins'] }}</span><span class="text-sm font-semibold text-softMutedTeal">Role 1</span></div></div>
-            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"><p class="text-xs font-bold tracking-widest uppercase text-slateGray">Clients</p><div class="mt-3 flex items-end justify-between"><span class="text-4xl font-black text-darkSlate">{{ $stats['clients'] }}</span><span class="text-sm font-semibold text-softMutedTeal">Role 2</span></div></div>
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"><p class="text-xs font-bold tracking-widest uppercase text-slateGray">Administrators</p><div class="mt-3 flex items-end justify-between"><span class="text-4xl font-black text-darkSlate">{{ $stats['admins'] }}</span><span class="text-sm font-semibold text-softMutedTeal">Admin</span></div></div>
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"><p class="text-xs font-bold tracking-widest uppercase text-slateGray">Clients</p><div class="mt-3 flex items-end justify-between"><span class="text-4xl font-black text-darkSlate">{{ $stats['clients'] }}</span><span class="text-sm font-semibold text-softMutedTeal">Client</span></div></div>
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"><p class="text-xs font-bold tracking-widest uppercase text-slateGray">Events</p><div class="mt-3 flex items-end justify-between"><span class="text-4xl font-black text-darkSlate">{{ $stats['events'] }}</span><span class="text-sm font-semibold text-softMutedTeal">Training tracks</span></div></div>
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"><p class="text-xs font-bold tracking-widest uppercase text-slateGray">Sessions</p><div class="mt-3 flex items-end justify-between"><span class="text-4xl font-black text-darkSlate">{{ $stats['sessions'] }}</span><span class="text-sm font-semibold text-softMutedTeal">Live schedules</span></div></div>
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"><p class="text-xs font-bold tracking-widest uppercase text-slateGray">Enrollments</p><div class="mt-3 flex items-end justify-between"><span class="text-4xl font-black text-darkSlate">{{ $stats['enrollments'] }}</span><span class="text-sm font-semibold text-softMutedTeal">Registrations</span></div></div>
@@ -141,7 +149,7 @@
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between"><div><h2 class="text-lg font-bold text-darkSlate">Recent Users</h2><p class="text-sm text-slateGray">Newest accounts registered in the platform.</p></div><span class="text-xs font-bold tracking-wider uppercase text-softMutedTeal">Accounts</span></div>
                 <div class="divide-y divide-gray-100">
                     @forelse ($recentUsers as $account)
-                        <div class="px-6 py-4 flex items-start justify-between gap-4"><div class="space-y-1"><p class="font-semibold text-darkSlate">{{ $account->first_name }} {{ $account->last_name }}</p><p class="text-sm text-slateGray">{{ $account->email }}</p></div><span class="inline-flex shrink-0 items-center rounded-full bg-iceBlue px-3 py-1 text-xs font-bold text-deepOcean">Role {{ $account->role_id }}</span></div>
+                        <div class="px-6 py-4 flex items-start justify-between gap-4"><div class="space-y-1"><p class="font-semibold text-darkSlate">{{ $account->first_name }} {{ $account->last_name }}</p><p class="text-sm text-slateGray">{{ $account->email }}</p></div><span class="inline-flex shrink-0 items-center rounded-full bg-iceBlue px-3 py-1 text-xs font-bold text-deepOcean">{{ $account->role_id == 1 ? 'Admin' : 'Client' }}</span></div>
                     @empty
                         <div class="px-6 py-8 text-sm text-slateGray">No users found yet.</div>
                     @endforelse
