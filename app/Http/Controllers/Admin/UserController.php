@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,12 +34,21 @@ class UserController extends Controller
             'is_active' => ['nullable', 'boolean'],
         ]);
 
+        $before = $user->only(['first_name', 'last_name', 'email', 'role_id', 'is_active']);
+
         $user->update([
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
             'role_id' => $validated['role_id'],
             'is_active' => $request->boolean('is_active'),
+        ]);
+
+        $after = $user->only(['first_name', 'last_name', 'email', 'role_id', 'is_active']);
+
+        AdminLog::log('updated', 'user', $user->user_id, 'Updated user: ' . $user->email, [
+            'before' => $before,
+            'after' => $after,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
@@ -50,7 +60,9 @@ class UserController extends Controller
             return back()->withErrors(['user' => 'You cannot delete the last administrator account.']);
         }
 
+        $info = $user->only(['user_id', 'first_name', 'last_name', 'email', 'role_id']);
         $user->delete();
+        AdminLog::log('deleted', 'user', $info['user_id'], 'Deleted user: ' . $info['email'], $info);
 
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
